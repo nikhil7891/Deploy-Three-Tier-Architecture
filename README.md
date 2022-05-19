@@ -69,7 +69,7 @@ Network Security Group
 ## Deployment steps
 The 3-tier deployment architecture consists of a Web tier, an application server tier, and a data tier
 
-This code with let you deploy two tiers for deploying a database please select one from the below options
+After deploying the resources using this template, for deploying a database please select one from the below options
 
 https://github.com/marketplace/actions/azure-sql-deploy
 
