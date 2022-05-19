@@ -12,10 +12,12 @@
 
 # Architecture
 
-
-
-![alt image](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Architecture.png)
+N-tier architecture on virtual machines
 ![alt image](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Reference_Architecture.JPG)
+
+Resources to be deployed
+![alt image](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Architecture.png)
+
 
 
 
