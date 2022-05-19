@@ -18,7 +18,7 @@
 
 
 
-[Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/master/template.json) can be modified to match your current infrastructure needs.
+[Template.json](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/template.json) can be modified to match your current infrastructure needs.
 
 ## One Click Deploying Template
 <!-- Powershell command for Translating Git URL for template.json
