@@ -1,560 +1,320 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.1",
+    "contentVersion": "1.0.0.0",
     "parameters": {
-        "managedInstanceName": {
-            "type": "String",
-            "metadata": {
-                "description": "Enter managed instance name."
-            }
-        },
-        "administratorLogin": {
-            "type": "String",
-            "metadata": {
-                "description": "Enter user name."
-            }
-        },
-        "administratorLoginPassword": {
-            "type": "SecureString",
-            "metadata": {
-                "description": "Enter password."
-            }
-        },
-        "location": {
-            "defaultValue": "[resourceGroup().location]",
-            "type": "String",
-            "metadata": {
-                "description": "Enter location. If you leave this field blank resource group location would be used."
-            }
-        },
-        "virtualNetworkName": {
-            "defaultValue": "SQLMI-VNET",
-            "type": "String",
-            "metadata": {
-                "description": "Enter virtual network name. If you leave this field blank name will be created by the template."
-            }
-        },
-        "addressPrefix": {
-            "defaultValue": "10.0.0.0/16",
-            "type": "String",
-            "metadata": {
-                "description": "Enter virtual network address prefix."
-            }
-        },
-        "subnetName": {
-            "defaultValue": "ManagedInstance",
-            "type": "String",
-            "metadata": {
-                "description": "Enter subnet name."
-            }
-        },
-        "subnetPrefix": {
-            "defaultValue": "10.0.0.0/24",
-            "type": "String",
-            "metadata": {
-                "description": "Enter subnet address prefix."
-            }
-        },
-        "managementSubnetName": {
-            "defaultValue": "Management",
-            "type": "String",
-            "metadata": {
-                "description": "Enter management subnet name."
-            }
-        },
-        "managementSubnetPrefix": {
-            "defaultValue": "10.0.1.0/24",
-            "type": "String",
-            "metadata": {
-                "description": "Enter management subnet address prefix."
-            }
-        },
-        "skuName": {
-            "defaultValue": "GP_Gen5",
+        "bootdiagstgaccType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
             "allowedValues": [
-                "GP_Gen5",
-                "BC_Gen5"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Enter sku name."
-            }
+                "Standard_LRS",
+                "Premium_LRS"
+            ]
         },
-        "vCores": {
-            "defaultValue": 16,
+        "WebServerName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "WebServerAdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "WebServerAdminPassword": {
+            "type": "securestring"
+        },
+        "WebServerWindowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2019-Datacenter",
             "allowedValues": [
-                8,
-                16,
-                24,
-                32,
-                40,
-                64,
-                80
-            ],
-            "type": "Int",
-            "metadata": {
-                "description": "Enter number of vCores."
-            }
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "2016-Datacenter",
+                "2019-Datacenter",
+                "Windows-Server-Technical-Preview"
+            ]
         },
-        "storageSizeInGB": {
-            "defaultValue": 256,
-            "minValue": 32,
-            "maxValue": 8192,
-            "type": "Int",
-            "metadata": {
-                "description": "Enter storage size."
-            }
+        "AppServerName": {
+            "type": "string",
+            "minLength": 1
         },
-        "licenseType": {
-            "defaultValue": "LicenseIncluded",
+        "AppServerAdminUserName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "AppServerAdminPassword": {
+            "type": "securestring"
+        },
+        "AppServerWindowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2019-Datacenter",
             "allowedValues": [
-                "BasePrice",
-                "LicenseIncluded"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Enter license type."
-            }
-        },
-        "virtualMachineName": {
-            "defaultValue": "SourceSQLVM",
-            "type": "String",
-            "metadata": {
-                "description": "The name of the VM"
-            }
-        },
-        "virtualMachineSize": {
-            "defaultValue": "Standard_D8s_v3",
-            "type": "String",
-            "metadata": {
-                "description": "The virtual machine size."
-            }
-        },
-        "existingVnetResourceGroup": {
-            "defaultValue": "[resourceGroup().name]",
-            "type": "String",
-            "metadata": {
-                "description": "Specify the resrouce group of the existing VNet"
-            }
-        },
-        "imageOffer": {
-            "defaultValue": "sql2019-ws2019",
-            "allowedValues": [
-                "sql2019-ws2019",
-                "sql2017-ws2019",
-                "SQL2017-WS2016",
-                "SQL2016SP1-WS2016",
-                "SQL2016SP2-WS2016",
-                "SQL2014SP3-WS2012R2",
-                "SQL2014SP2-WS2012R2"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Windows Server and SQL Offer"
-            }
-        },
-        "sqlSku": {
-            "defaultValue": "Standard",
-            "allowedValues": [
-                "Standard",
-                "Enterprise",
-                "SQLDEV",
-                "Web",
-                "Express"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "SQL Server Sku"
-            }
-        },
-        "adminUsername": {
-            "type": "String",
-            "metadata": {
-                "description": "The admin user name of the VM"
-            }
-        },
-        "adminPassword": {
-            "type": "SecureString",
-            "metadata": {
-                "description": "The admin password of the VM"
-            }
-        },
-        "storageWorkloadType": {
-            "defaultValue": "General",
-            "allowedValues": [
-                "General",
-                "OLTP",
-                "DW"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "SQL Server Workload Type"
-            }
-        },
-        "sqlDataDisksCount": {
-            "defaultValue": 1,
-            "minValue": 1,
-            "maxValue": 8,
-            "type": "Int",
-            "metadata": {
-                "description": "Amount of data disks (1TB each) for SQL Data files"
-            }
-        },
-        "dataPath": {
-            "defaultValue": "F:\\SQLData",
-            "type": "String",
-            "metadata": {
-                "description": "Path for SQL Data files. Please choose drive letter from F to Z, and other drives from A to E are reserved for system"
-            }
-        },
-        "sqlLogDisksCount": {
-            "defaultValue": 1,
-            "minValue": 1,
-            "maxValue": 8,
-            "type": "Int",
-            "metadata": {
-                "description": "Amount of data disks (1TB each) for SQL Log files"
-            }
-        },
-        "logPath": {
-            "defaultValue": "G:\\SQLLog",
-            "type": "String",
-            "metadata": {
-                "description": "Path for SQL Log files. Please choose drive letter from F to Z and different than the one used for SQL data. Drive letter from A to E are reserved for system"
-            }
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "2016-Datacenter",
+                "2019-Datacenter",
+                "Windows-Server-Technical-Preview"
+            ]
         }
     },
     "variables": {
-        "networkSecurityGroupName": "[concat('SQLMI-', parameters('managedInstanceName'), '-NSG')]",
-        "routeTableName": "[concat('SQLMI-', parameters('managedInstanceName'), '-Route-Table')]",
-        "virtualMachineName": "[concat(take(parameters('managedInstanceName'),13), 'JB')]",
-        "networkInterfaceName": "[concat('SQLMI-', parameters('managedInstanceName'), '-JB-NIC')]",
-        "publicIpAddressName": "[concat('SQLMI-', parameters('managedInstanceName'), '-JB-IP')]",
-        "jbNetworkSecurityGroupName": "[concat('SQLMI-', parameters('managedInstanceName'), '-JB-NSG')]",
-        "storageAccountNamePrefix": "storage",
-        "storageAccountName": "[toLower(concat(variables('storageAccountNamePrefix'), uniqueString(resourceGroup().id)))]"
+        "BlueprintInitialVnetPrefix": "10.0.0.0/16",
+        "BlueprintInitialVnetSubnet1Name": "web-subnet",
+        "BlueprintInitialVnetSubnet1Prefix": "10.0.0.0/24",
+        "BlueprintInitialVnetSubnet2Name": "app-subnet",
+        "BlueprintInitialVnetSubnet2Prefix": "10.0.1.0/24",
+        "BlueprintInitialVnetSubnet3Name": "management-subnet",
+        "BlueprintInitialVnetSubnet3Prefix": "10.0.2.0/24",
+        "bootdiagstgaccName": "[concat('boot', uniqueString(resourceGroup().id))]",
+        "WebServerImagePublisher": "MicrosoftWindowsServer",
+        "WebServerImageOffer": "WindowsServer",
+        "WebServerOSDiskName": "WebServerOSDisk",
+        "WebServerVmSize": "Standard_D2_v2",
+        "WebServerVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'BlueprintInitialVnet')]",
+        "WebServerSubnetRef": "[concat(variables('WebServerVnetID'), '/subnets/', variables('BlueprintInitialVnetSubnet1Name'))]",
+        "WebServerStorageAccountContainerName": "vhds",
+        "WebServerNicName": "[concat(parameters('WebServerName'), 'NetworkInterface')]",
+        "AppServerImagePublisher": "MicrosoftWindowsServer",
+        "AppServerImageOffer": "WindowsServer",
+        "AppServerOSDiskName": "AppServerOSDisk",
+        "AppServerVmSize": "Standard_D2_v2",
+        "AppServerVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'BlueprintInitialVnet')]",
+        "AppServerSubnetRef": "[concat(variables('AppServerVnetID'), '/subnets/', variables('BlueprintInitialVnetSubnet2Name'))]",
+        "AppServerStorageAccountContainerName": "vhds",
+        "AppServerNicName": "[concat(parameters('AppServerName'), 'NetworkInterface')]",
+        "WebNsgName": "[concat(variables('BlueprintInitialVnetSubnet1Name'), '-nsg')]",
+        "AppNsgName": "[concat(variables('BlueprintInitialVnetSubnet2Name'), '-nsg')]",
+        "MgmtNsgName": "[concat(variables('BlueprintInitialVnetSubnet3Name'), '-nsg')]"
     },
     "resources": [
         {
+            "name": "[variables('WebNsgName')]",
             "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2019-06-01",
-            "name": "[variables('networkSecurityGroupName')]",
-            "location": "[parameters('location')]",
+            "apiVersion": "2020-06-01",
+            "location": "[resourceGroup().location]",
             "properties": {
-                "securityRules": [
-                    {
-                        "name": "allow_tds_inbound",
-                        "properties": {
-                            "description": "Allow access to data",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "1433",
-                            "sourceAddressPrefix": "VirtualNetwork",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 1000,
-                            "direction": "Inbound"
-                        }
-                    },
-                    {
-                        "name": "allow_redirect_inbound",
-                        "properties": {
-                            "description": "Allow inbound redirect traffic to Managed Instance inside the virtual network",
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "11000-11999",
-                            "sourceAddressPrefix": "VirtualNetwork",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 1100,
-                            "direction": "Inbound"
-                        }
-                    },
-                    {
-                        "name": "deny_all_inbound",
-                        "properties": {
-                            "description": "Deny all other inbound traffic",
-                            "protocol": "*",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "*",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 4096,
-                            "direction": "Inbound"
-                        }
-                    },
-                    {
-                        "name": "deny_all_outbound",
-                        "properties": {
-                            "description": "Deny all other outbound traffic",
-                            "protocol": "*",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "*",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 4096,
-                            "direction": "Outbound"
-                        }
-                    }
-                ]
+                "securityRules": []
             }
         },
         {
-            "type": "Microsoft.Network/routeTables",
-            "apiVersion": "2019-06-01",
-            "name": "[variables('routeTableName')]",
-            "location": "[parameters('location')]",
+            "name": "[variables('AppNsgName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-06-01",
+            "location": "[resourceGroup().location]",
             "properties": {
-                "disableBgpRoutePropagation": false
+                "securityRules": []
             }
         },
         {
+            "name": "[variables('MgmtNsgName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            }
+        },
+        {
+            "name": "BlueprintInitialVnet",
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2019-06-01",
-            "name": "[parameters('virtualNetworkName')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2016-03-30",
             "dependsOn": [
-                "[variables('routeTableName')]",
-                "[variables('networkSecurityGroupName')]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('WebNsgName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('AppNsgName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('MgmtNsgName'))]"
             ],
+            "tags": {
+                "displayName": "BlueprintInitialVnet"
+            },
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[parameters('addressPrefix')]"
+                        "[variables('BlueprintInitialVnetPrefix')]"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnetName')]",
+                        "name": "[variables('BlueprintInitialVnetSubnet1Name')]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnetPrefix')]",
-                            "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
-                            },
+                            "addressPrefix": "[variables('BlueprintInitialVnetSubnet1Prefix')]",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
-                            },
-                            "delegations": [
-                                {
-                                    "name": "miDelegation",
-                                    "properties": {
-                                        "serviceName": "Microsoft.Sql/managedInstances"
-                                    }
-                                }
-                            ]
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('WebNsgName'))]"
+                            }
                         }
                     },
                     {
-                        "name": "[parameters('managementSubnetName')]",
+                        "name": "[variables('BlueprintInitialVnetSubnet2Name')]",
                         "properties": {
-                            "addressPrefix": "[parameters('managementSubnetPrefix')]"
+                            "addressPrefix": "[variables('BlueprintInitialVnetSubnet2Prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('AppNsgName'))]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "[variables('BlueprintInitialVnetSubnet3Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('BlueprintInitialVnetSubnet3Prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('MgmtNsgName'))]"
+                            }
                         }
                     }
                 ]
             }
         },
         {
-            "type": "Microsoft.Sql/managedInstances",
-            "apiVersion": "2019-06-01-preview",
-            "name": "[parameters('managedInstanceName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[parameters('virtualNetworkName')]"
-            ],
+            "name": "[variables('bootdiagstgaccName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2016-01-01",
             "sku": {
-                "name": "[parameters('skuName')]"
+                "name": "[parameters('bootdiagstgaccType')]"
             },
-            "identity": {
-                "type": "SystemAssigned"
+            "dependsOn": [],
+            "tags": {
+                "displayName": "bootdiagstgacc"
+            },
+            "kind": "Storage"
+        },
+        {
+            "name": "[variables('WebServerNicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2018-10-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'BlueprintInitialVnet')]"
+            ],
+            "tags": {
+                "displayName": "WebServerNic"
             },
             "properties": {
-                "administratorLogin": "[parameters('administratorLogin')]",
-                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
-                "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
-                "storageSizeInGB": "[parameters('storageSizeInGB')]",
-                "vCores": "[parameters('vCores')]",
-                "licenseType": "[parameters('licenseType')]"
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('WebServerSubnetRef')]"
+                            }
+                        }
+                    }
+                ]
             }
         },
         {
+            "name": "[parameters('WebServerName')]",
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2019-12-01",
-            "name": "[parameters('virtualMachineName')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2021-03-01",
             "dependsOn": [
-                "[variables('networkInterfaceName')]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('bootdiagstgaccName'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('WebServerNicName'))]"
             ],
+            "tags": {
+                "displayName": "WebServer"
+            },
             "properties": {
-                "osProfile": {
-                    "computerName": "[parameters('virtualMachineName')]",
-                    "adminUsername": "[parameters('administratorLogin')]",
-                    "adminPassword": "[parameters('administratorLoginPassword')]",
-                    "windowsConfiguration": {
-                        "provisionVmAgent": "true"
-                    }
-                },
                 "hardwareProfile": {
-                    "vmSize": "[parameters('virtualMachineSize')]"
+                    "vmSize": "[variables('WebServerVmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('WebServerName')]",
+                    "adminUsername": "[parameters('WebServerAdminUsername')]",
+                    "adminPassword": "[parameters('WebServerAdminPassword')]"
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "MicrosoftSQLServer",
-                        "offer": "[parameters('imageOffer')]",
-                        "sku": "[parameters('sqlSku')]",
+                        "publisher": "[variables('WebServerImagePublisher')]",
+                        "offer": "[variables('WebServerImageOffer')]",
+                        "sku": "[parameters('WebServerWindowsOSVersion')]",
                         "version": "latest"
                     },
                     "osDisk": {
-                        "createOption": "fromImage",
+                        "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS"
+                            "storageAccountType": "Standard_LRS"
                         }
                     }
                 },
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('WebServerNicName'))]"
                         }
                     ]
                 }
             }
         },
         {
-            "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
-            "apiVersion": "2017-03-01-preview",
-            "name": "[parameters('virtualMachineName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
-            ],
-            "properties": {
-                "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
-                "sqlManagement": "Full",
-                "SqlServerLicenseType": "PAYG",
-                "StorageConfigurationSettings": {
-                    "StorageWorkloadType": "[parameters('storageWorkloadType')]",
-                    "SQLDataSettings": {
-                        "DefaultFilePath": "[parameters('dataPath')]"
-                    },
-                    "SQLLogSettings": {
-                        "DefaultFilePath": "[parameters('logPath')]"
-                    }
-                }
-            }
-        },
-        {
+            "name": "[variables('AppServerNicName')]",
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2019-06-01",
-            "name": "[variables('networkInterfaceName')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2018-10-01",
             "dependsOn": [
-                "[parameters('virtualNetworkName')]",
-                "[variables('publicIpAddressName')]",
-                "[variables('jbNetworkSecurityGroupName')]"
+                "[resourceId('Microsoft.Network/virtualNetworks', 'BlueprintInitialVnet')]"
             ],
+            "tags": {
+                "displayName": "AppServerNic"
+            },
             "properties": {
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('managementSubnetName'))]"
-                            },
                             "privateIPAllocationMethod": "Dynamic",
-                            "publicIpAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
+                            "subnet": {
+                                "id": "[variables('AppServerSubnetRef')]"
                             }
-                        }
-                    }
-                ],
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('jbNetworkSecurityGroupName'))]"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2019-06-01",
-            "name": "[variables('publicIpAddressName')]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "Basic"
-            },
-            "properties": {
-                "publicIpAllocationMethod": "Dynamic"
-            }
-        },
-        {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2019-06-01",
-            "name": "[variables('storageAccountName')]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "Standard_LRS",
-                "tier": "Standard"
-            },
-            "kind": "StorageV2",
-            "properties": {
-                "networkAcls": {
-                    "bypass": "AzureServices",
-                    "defaultAction": "Allow"
-                },
-                "supportsHttpsTrafficOnly": false,
-                "encryption": {
-                    "services": {
-                        "file": {
-                            "enabled": true
-                        },
-                        "blob": {
-                            "enabled": true
-                        }
-                    },
-                    "keySource": "Microsoft.Storage"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2019-06-01",
-            "name": "[variables('jbNetworkSecurityGroupName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "RDP",
-                        "properties": {
-                            "priority": 300,
-                            "protocol": "Tcp",
-                            "access": "Allow",
-                            "direction": "Inbound",
-                            "sourceAddressPrefix": "*",
-                            "sourcePortRange": "*",
-                            "destinationAddressPrefix": "*",
-                            "destinationPortRange": "3389"
                         }
                     }
                 ]
             }
+        },
+        {
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('AppServerNicName'))]"
+            ],
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('AppServerName')]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('AppServerVmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('AppServerName')]",
+                    "adminUsername": "[parameters('AppServerAdminUsername')]",
+                    "adminPassword": "[parameters('AppServerAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('AppServerImagePublisher')]",
+                        "offer": "[variables('AppServerImageOffer')]",
+                        "sku": "[parameters('AppServerWindowsOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('AppServerNicName'))]"
+                        }
+                    ]
+                }
+            },
+            "tags": {
+                "displayName": "AppServer"
+            },
+            "type": "Microsoft.Compute/virtualMachines"
         }
     ],
-    "outputs": {
-        "virtualMachineName": {
-            "type": "String",
-            "value": "[parameters('virtualMachineName')]"
-        },
-        "adminUsername": {
-            "type": "String",
-            "value": "[parameters('adminUsername')]"
-        },
-        "managedInstanceName": {
-            "type": "String",
-            "value": "[parameters('managedInstanceName')]"
-        },
-        "administratorLogin": {
-            "type": "String",
-            "value": "[parameters('administratorLogin')]"
-        }
-    }
+    "outputs": {}
 }
