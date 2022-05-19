@@ -56,14 +56,24 @@ Visit https://portal.azure.com
 Allow 5-10 minutes for the deployment to complete
 
 ## Azure services and related products
+Resource Group
 
+Azure virtual Network (with Subnets)
+
+Azure Storage Account
+
+Azure Virtual Machine
 
 ## Deployment steps
 
 
 
 ## Related references
+https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier
 
+https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/n-tier/n-tier-sql-server
+
+https://docs.microsoft.com/en-us/azure/architecture/high-availability/ref-arch-iaas-web-and-db
 
 ## License & Contribute
 
