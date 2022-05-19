@@ -48,6 +48,6 @@ Final URL: <Base URL>/<uri>
 ## License & Contribute
 
 You are responsible for the performance, the necessary testing, and if needed any regulatory clearance for any of the models produced by this toolbox.
-Please refer [LICENSE](LICENSE) &  [Contribute](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/master/Contribute.md) for more details
+Please refer [LICENSE](LICENSE) &  [Contribute](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Contribute.md) for more details
 
 
