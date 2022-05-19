@@ -14,7 +14,7 @@
 
 
 
-![alt image]()
+![alt image](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Architecture.png)
 
 
 
