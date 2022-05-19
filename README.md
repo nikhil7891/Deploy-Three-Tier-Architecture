@@ -51,9 +51,7 @@ Final URL: <Base URL>/<uri>
 
 
 ## Deploying an ARM Template using the Azure portal
-Visit https://portal.azure.com
-
-Allow 5-10 minutes for the deployment to complete
+Visit portal.azure.com search for the templates add new template (define a name, description & Copy the code from the json file to the ARM template) wait for few mins for the Template to be ready to use got to the created template and click to deploy & then pass the required parameters wait for around 10 mins for the deployment to get completed
 
 ## Azure services and related products
 Resource Group
