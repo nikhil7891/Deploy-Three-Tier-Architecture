@@ -16,7 +16,13 @@ Quickly deploy POCs set up for application workload testing
 
 
 ## Target audience
+Infrastructure Architect
 
+Application Developer
+
+IT Professional
+
+Cloud Solution Architect
 
 
 # Architecture
@@ -24,7 +30,7 @@ Quickly deploy POCs set up for application workload testing
 N-tier architecture on virtual machines
 ![alt image](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Reference_Architecture.JPG)
 
-Resources to be deployed
+The Template.json Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
 ![alt image](https://github.com/nikhil7891/Deploy-Three-Tier-Architecture/blob/master/Architecture.png)
 
 
@@ -45,7 +51,9 @@ Final URL: <Base URL>/<uri>
 
 
 ## Deploying an ARM Template using the Azure portal
+Visit https://portal.azure.com
 
+Allow 5-10 minutes for the deployment to complete
 
 ## Azure services and related products
 
