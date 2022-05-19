@@ -67,8 +67,11 @@ Azure Virtual Machine
 Network Security Group
 
 ## Deployment steps
+The 3-tier deployment architecture consists of a Web tier, an application server tier, and a data tier
 
+This code with let you deploy two tiers for deploying a database please select one from the below options
 
+https://github.com/marketplace/actions/azure-sql-deploy
 
 ## Related references
 https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier
