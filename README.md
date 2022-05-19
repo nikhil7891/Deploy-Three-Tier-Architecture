@@ -64,6 +64,8 @@ Azure Storage Account
 
 Azure Virtual Machine
 
+Network Security Group
+
 ## Deployment steps
 
 
