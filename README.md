@@ -22,10 +22,9 @@
 
 ## One Click Deploying Template
 <!-- Powershell command for Translating Git URL for template.json
-    $url = "https://raw.githubusercontent.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/master/template.json"
+    $url = "https://raw.githubusercontent.com/nikhil7891/Deploy-Three-Tier-Architecture/master/template.json"
     [uri]::EscapeDataString($url)
-    >> uri = https%3A%2F%2Fgithub.com%2FGanapathivarma07%2FLRS-Migration-AzureSQLMI%2Fblob%2F
-master%2Ftemplate.json
+    >> uri = https%3A%2F%2Fraw.githubusercontent.com%2Fnikhil7891%2FDeploy-Three-Tier-Architecture%2Fmaster%2Ftemplate.json
 
 Base URL: https://portal.azure.com/#create/Microsoft.Template/uri
 Final URL: <Base URL>/<uri>
